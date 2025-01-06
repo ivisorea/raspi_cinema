@@ -4,7 +4,6 @@ import { services } from './config/services';
 
 function App() {
   const [time, setTime] = useState(new Date());
-  const [location, setLocation] = useState({ city: '', country: '' });
   const [weather, setWeather] = useState({ temperature: '', humidity: '' });
   const [showServiceGrid, setShowServiceGrid] = useState(false);
 
@@ -16,16 +15,14 @@ function App() {
   }, []);
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(async (position) => {
-      const { latitude, longitude } = position.coords;
-      const locationResponse = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`);
-      const locationData = await locationResponse.json();
-      setLocation({ city: locationData.city, country: locationData.countryName });
-
+    const fetchWeather = async () => {
+      const latitude = 52.1316;
+      const longitude = 11.6393;
       const weatherResponse = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`);
       const weatherData = await weatherResponse.json();
       setWeather({ temperature: weatherData.current_weather.temperature, humidity: weatherData.current_weather.relative_humidity });
-    });
+    };
+    fetchWeather();
   }, []);
 
   return (
@@ -38,7 +35,7 @@ function App() {
               {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </div>
             <div className="text-center text-white text-2xl mb-4">
-              {location.city}, {location.country}
+              Magdeburg Stadtfeld Ost, Germany
             </div>
             <div className="text-center text-white text-2xl mb-4">
               Temperature: {weather.temperature}°C
@@ -60,6 +57,14 @@ function App() {
           <>
             <h1 className="mb-8 text-center text-4xl font-bold text-white">🍿 Cinema Paradise 🎬</h1>
             <ServiceGrid services={services} />
+            <div className="text-center mt-8">
+              <button 
+                className="px-4 py-2 bg-blue-500 text-white rounded" 
+                onClick={() => setShowServiceGrid(false)}
+              >
+                Back
+              </button>
+            </div>
           </>
         )}
       </div>
