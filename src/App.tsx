@@ -70,11 +70,34 @@ function App() {
         temperatureMin: Array.from(daily.variables(2)!.valuesArray()!).map(Math.round),
         }
         };
-    setWeather({ 
-      temperature: Math.round(weatherData.current.temperature),
-      humidity: 'N/A' 
-    });
-    setDailyWeather(weatherData.daily);
+
+      // Sort daily weather by Monday
+      const sortByMonday = (dates: Date[]) => {
+        const orderedDays = dates.map((date, index) => ({
+          date,
+          weatherCode: weatherData.daily.weatherCode[index],
+          tempMax: weatherData.daily.temperatureMax[index],
+          tempMin: weatherData.daily.temperatureMin[index]
+        }));
+
+        orderedDays.sort((a, b) => {
+          const dayA = a.date.getDay() || 7; // Convierte domingo (0) a 7
+          const dayB = b.date.getDay() || 7;
+          return dayA - dayB;
+        });
+
+        weatherData.daily.time = orderedDays.map(d => d.date);
+        weatherData.daily.weatherCode = orderedDays.map(d => d.weatherCode);
+        weatherData.daily.temperatureMax = orderedDays.map(d => d.tempMax);
+        weatherData.daily.temperatureMin = orderedDays.map(d => d.tempMin);
+      };
+
+      sortByMonday(weatherData.daily.time);
+      setWeather({ 
+        temperature: Math.round(weatherData.current.temperature),
+        humidity: 'N/A' 
+      });
+      setDailyWeather(weatherData.daily);
     };
 
     fetchWeather();
@@ -92,8 +115,8 @@ function App() {
       <div className="mx-auto max-w-6xl">
         {!showServiceGrid && (
           <>
-            <h1 className="mb-8 text-center text-4xl font-bold text-white">🏠 Home </h1>
-            <div className="text-center text-white text-6xl mb-8">
+            {/* <h1 className="mb-8 text-center text-4xl font-bold text-white">🏠 Home </h1> */}
+            <div className="text-center text-white text-8xl mb-8">
               {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </div>
             <div className="text-center text-white text-2xl mb-4">
@@ -103,24 +126,26 @@ function App() {
               Temperature: {weather.temperature} °C
             </div>
             <div className="text-center text-white text-2xl mb-8">
-              {/* Humidity: {weather.humidity}% */}
             </div>
             <div className="text-center text-white text-2xl mb-8">
-              <h2>Weekly Forecast</h2>
-              <ul>
-                {dailyWeather.time && dailyWeather.time.map((day, index) => (
-                  <li key={index}>
-                    {day.toLocaleDateString('en-US', { weekday: 'long' })}: {dailyWeather.temperatureMax[index]} °C / {dailyWeather.temperatureMin[index]} °C
-                  </li>
-                ))}
-              </ul>
+              <div className="flex justify-center space-x-8">
+                {dailyWeather.time && dailyWeather.time.map((day, index) => {
+                  const isToday = new Date().toDateString() === day.toDateString();
+                  return (
+                    <div key={index} className="flex flex-col items-center">
+                      <div className={isToday ? "text-red-500" : ""}>{day.toLocaleDateString('en-US', { weekday: 'short' })}</div>
+                      <div>{dailyWeather.temperatureMax[index]}° / {dailyWeather.temperatureMin[index]}°</div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
             <div className="text-center mb-8">
               <button 
-                className="px-4 py-2 bg-blue-500 text-white rounded" 
+                className="fixed top-6 right-6 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg flex items-center space-x-2 transition-colors" 
                 onClick={() => setShowServiceGrid(true)}
               >
-                Cinema
+                <span>🎬</span>
               </button>
             </div>
           </>
