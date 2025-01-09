@@ -115,8 +115,7 @@ function App() {
       <div className="mx-auto max-w-6xl">
         {!showServiceGrid && (
           <>
-            {/* <h1 className="mb-8 text-center text-4xl font-bold text-white">🏠 Home </h1> */}
-            <div className="text-center text-white text-8xl mb-8">
+            <div className="text-center text-white text-8xl mb-8 mt-8">
               {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </div>
             <div className="text-center text-white text-2xl mb-4">
