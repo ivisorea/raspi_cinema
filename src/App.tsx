@@ -3,6 +3,16 @@ import ServiceGrid from './components/ServiceGrid';
 import { services } from './config/services';
 import { fetchWeatherApi } from 'openmeteo';
 import { RiMovie2Fill } from 'react-icons/ri';
+import { 
+  WiDaySunny, 
+  WiCloudy, 
+  WiRain, 
+  WiSnow, 
+  WiThunderstorm, 
+  WiDayFog,
+  WiNightClear,
+  WiDayCloudy
+} from 'react-icons/wi';
 
 const params = {
 	"latitude": 52.52,
@@ -13,9 +23,21 @@ const params = {
 };
 const url = "https://api.open-meteo.com/v1/forecast";
 
+const getWeatherIcon = (code: number, size?: string) => {
+  // Códigos según la documentación de Open-Meteo
+  if (code === 0) return <WiDaySunny className={size ? size:"text-3xl"} />;  // Clear sky
+  if (code === 1 || code === 2) return <WiDayCloudy className={size ? size:"text-3xl"} />; // Partly cloudy
+  if (code === 3) return <WiCloudy className={size ? size:"text-3xl"} />; // Overcast
+  if ([45, 48].includes(code)) return <WiDayFog className={size ? size:"text-3xl"} />; // Foggy
+  if ([51, 53, 55, 56, 57, 61, 63, 65, 66, 67].includes(code)) return <WiRain className={size ? size:"text-3xl"} />; // Rain
+  if ([71, 73, 75, 77, 85, 86].includes(code)) return <WiSnow className={size ? size:"text-3xl"} />; // Snow
+  if ([95, 96, 99].includes(code)) return <WiThunderstorm className={size ? size:"text-3xl"} />; // Thunderstorm
+  return <WiDaySunny className={size ? size:"text-3xl"} />; // Default
+};
+
 function App() {
   const [time, setTime] = useState(new Date());
-  const [weather, setWeather] = useState({ temperature: -0, humidity: '' });
+  const [weather, setWeather] = useState({ temperature: -0, humidity: '', weatherCode: 0 });
   interface DailyWeather {
     time: Date[];
     weatherCode: number[];
@@ -52,8 +74,10 @@ function App() {
         temperature: Math.round(current.variables(0)!.value()), // Current is only 1 value, therefore `.value()`
         weatherCode: current.variables(1)!.value(),
         windSpeed: current.variables(2)!.value(),
-        windDirection: current.variables(3)!.value(),
-        precipitacion: current.variables(4)!.value()
+        precipitacion: current.variables(4)!.value(),
+        rain: current.variables(0)!.value(),
+        showers: current.variables(1)!.value(),
+        snowfall: current.variables(2)!.value(),
         },
         hourly: {
         time: range(Number(hourly.time()), Number(hourly.timeEnd()), hourly.interval()).map(
@@ -71,7 +95,7 @@ function App() {
         temperatureMin: Array.from(daily.variables(2)!.valuesArray()!).map(Math.round),
         }
         };
-
+      console.log('===  === ===', weatherData.current);
       // Sort daily weather by Monday
       const sortByMonday = (dates: Date[]) => {
         const orderedDays = dates.map((date, index) => ({
@@ -96,7 +120,8 @@ function App() {
       sortByMonday(weatherData.daily.time);
       setWeather({ 
         temperature: Math.round(weatherData.current.temperature),
-        humidity: 'N/A' 
+        humidity: 'N/A',
+        weatherCode: weatherData.current.weatherCode 
       });
       setDailyWeather(weatherData.daily);
     };
@@ -119,8 +144,9 @@ function App() {
             <div className="text-center text-white text-8xl mb-8 mt-8">
               {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </div>
-            <div className="text-center text-white text-6xl mb-12 mt-12">
-              Temperature: {weather.temperature} °C
+            <div className="text-center text-white text-6xl mb-12 mt-12 flex items-center justify-center gap-4">
+              <span>{weather.temperature} °C</span>
+              {getWeatherIcon(weather.weatherCode, "text-6xl")}
             </div>
             <div className="text-center text-white text-2xl mb-8">
             </div>
@@ -130,7 +156,10 @@ function App() {
                   const isToday = new Date().toDateString() === day.toDateString();
                   return (
                     <div key={index} className="flex flex-col items-center">
-                      <div className={isToday ? "text-red-500" : ""}>{day.toLocaleDateString('en-US', { weekday: 'short' })}</div>
+                      <div className={isToday ? "text-red-500" : ""}>
+                        {day.toLocaleDateString('en-US', { weekday: 'short' })}
+                      </div>
+                      {getWeatherIcon(dailyWeather.weatherCode[index])}
                       <div>{dailyWeather.temperatureMax[index]}° / {dailyWeather.temperatureMin[index]}°</div>
                     </div>
                   );
