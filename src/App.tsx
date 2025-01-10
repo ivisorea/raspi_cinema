@@ -119,7 +119,7 @@ function App() {
             <div className="text-center text-white text-8xl mb-8 mt-8">
               {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </div>
-            <div className="text-center text-white text-2xl mb-12 mt-12">
+            <div className="text-center text-white text-6xl mb-12 mt-12">
               Temperature: {weather.temperature} °C
             </div>
             <div className="text-center text-white text-2xl mb-8">
