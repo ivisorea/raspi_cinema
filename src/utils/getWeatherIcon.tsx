@@ -2,7 +2,7 @@ import { BsCloudDrizzle, BsCloudFog, BsCloudLightningRain, BsCloudRainHeavy, BsC
 import { WiDaySunny } from "react-icons/wi";
 
 const getWeatherIcon = (code: number, size?: string) => {
-    const className = size || "text-3xl";
+    const className = size || "text-4xl";
     
     // Clear sky
     if (code === 0) return <WiDaySunny className={className} />;

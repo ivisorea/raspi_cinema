@@ -23,7 +23,7 @@ const App = () => {
       <div className="mx-auto max-w-6xl">
         {!showServiceGrid && (
           <>
-            <div className="text-center text-white text-8xl mb-8 mt-8">
+            <div className="text-center text-white text-8xl mb-8 mt-2">
               {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </div>
             <div className="text-center text-white text-6xl mb-12 mt-12 flex items-center justify-center gap-4">
