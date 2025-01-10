@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import ServiceGrid from './components/ServiceGrid';
 import { services } from './config/services';
-// import { fetchWeatherApi } from 'openmeteo';
 import { RiMovie2Fill } from 'react-icons/ri';
 import useWeather from './hooks/useWeather';
 import getWeatherIcon from './utils/getWeatherIcon';
