@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import ServiceGrid from './components/ServiceGrid';
 import { services } from './config/services';
 import { fetchWeatherApi } from 'openmeteo';
+import { RiMovie2Fill } from 'react-icons/ri';
 
 const params = {
 	"latitude": 52.52,
@@ -118,10 +119,7 @@ function App() {
             <div className="text-center text-white text-8xl mb-8 mt-8">
               {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </div>
-            <div className="text-center text-white text-2xl mb-4">
-              Magdeburg Stadtfeld Ost, Germany
-            </div>
-            <div className="text-center text-white text-2xl mb-4">
+            <div className="text-center text-white text-2xl mb-12 mt-12">
               Temperature: {weather.temperature} °C
             </div>
             <div className="text-center text-white text-2xl mb-8">
@@ -141,10 +139,10 @@ function App() {
             </div>
             <div className="text-center mb-8">
               <button 
-                className="fixed top-6 right-6 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg flex items-center space-x-2 transition-colors" 
+                className="fixed top-6 right-6 px-4 py-2 text-white rounded-lg flex items-center space-x-2 transition-colors" 
                 onClick={() => setShowServiceGrid(true)}
               >
-                <span>🎬</span>
+               <RiMovie2Fill fill='white' size={24} />
               </button>
             </div>
           </>
