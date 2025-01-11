@@ -4,6 +4,7 @@ import { services } from './config/services';
 import { RiMovie2Fill } from 'react-icons/ri';
 import useWeather from './hooks/useWeather';
 import getWeatherIcon from './utils/getWeatherIcon';
+import { MdArrowBackIos } from 'react-icons/md';
 
 const App = () => {
   const [time, setTime] = useState(new Date());
@@ -18,15 +19,18 @@ const App = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 p-6 sm:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 p-4">
       <div className="mx-auto max-w-6xl">
         {!showServiceGrid && (
           <>
             <div className="text-center text-white text-8xl mb-8">
               {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </div>
-            <div className="text-center text-white text-6xl mb-12 mt-12 flex items-center justify-center gap-4">
-              <span>{weather.temperature} °C</span>
+            <div className="text-center text-white text-6xl mb-12 mt-12 flex items-center justify-center gap-8">
+              <div className='flex flex-col items-center gap-2'>
+                <span>{weather.temperature} °C</span>
+                <span className='text-2xl'>{weather.apparentTemperature} °C</span> 
+              </div>              
               {getWeatherIcon(weather.weatherCode, "text-6xl")}
             </div>
             <div className="text-center text-white text-2xl mb-8">
@@ -44,7 +48,7 @@ const App = () => {
                         {getWeatherIcon(dailyWeather.weatherCode[index])}
                       </div>
                       <div>
-                        {dailyWeather.temperatureMax[index]}° / {dailyWeather.temperatureMin[index]}°
+                         {dailyWeather.temperatureMin[index]}° / {dailyWeather.temperatureMax[index]}°
                       </div>
                     </div>
                   );
@@ -67,10 +71,10 @@ const App = () => {
             <ServiceGrid services={services} />
             <div className="text-center mt-8">
               <button 
-                className="px-4 py-2 bg-blue-500 text-white rounded" 
+                className="px-4 py-2 text-white rounded" 
                 onClick={() => setShowServiceGrid(false)}
               >
-                Back
+                <MdArrowBackIos size={24}/>
               </button>
             </div>
           </>

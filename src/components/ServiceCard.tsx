@@ -22,13 +22,13 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className={`block ${bgColor} rounded-xl p-6 shadow-lg transition-transform hover:scale-105 hover:shadow-xl`}
+      className={`block ${bgColor} rounded-lg p-4 shadow-md transition-transform hover:scale-105 hover:shadow-lg max-w-[200px] w-full flex flex-col items-center text-center`}
     >
-      <div className={`flex items-center justify-between ${textColor}`}>
-        <div className="text-3xl">{icon}</div>
+      <div className={`flex items-center justify-center ${textColor}`}>
+        <div className="text-2xl">{icon}</div>
       </div>
-      <h2 className={`mt-4 text-xl font-bold ${textColor}`}>{name}</h2>
-      <p className={`mt-2 text-sm ${textColor} opacity-90`}>{description}</p>
+      <h2 className={`mt-2 text-lg font-bold ${textColor}`}>{name}</h2>
+      <p className={`mt-1 text-xs ${textColor} opacity-90`}>{description}</p>
     </a>
   );
 };
